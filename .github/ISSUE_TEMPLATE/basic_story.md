@@ -1,6 +1,6 @@
 ---
 name: Basic Story
-about: Issue in cucumebr format
+about: Issue written in cucumber format
 title: ''
 labels: ''
 assignees: ''
