@@ -1,3 +1,11 @@
+---
+name: Basic Story
+about: Issue in cucumebr format
+title: ''
+labels: ''
+assignees: ''
+
+---
 Title (one line describing the story)
  
 Narrative:
