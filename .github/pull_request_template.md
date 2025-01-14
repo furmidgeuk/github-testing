@@ -2,7 +2,7 @@
 
 <!--
 - Make your reasons easy to understand. Write it for people outside your team.
-- Please don't only link to a JIRA ticket, these can be deleted.
+- Please don't only link to a SNOW ticket, as these can be deleted.
 
 To learn how to link this PR to a GitHub issue, see https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword
 -->
