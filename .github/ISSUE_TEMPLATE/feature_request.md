@@ -31,7 +31,7 @@ So that customers are provided appropriate information and a good experience, wh
     </pre>
     <p>Bad user story examples</p>
     <pre>
-As a member of the CloudOps team
+As a member of the SRE team
 I want to implement outage page controls
 So that outage pages can be switched on and off
     </pre>
