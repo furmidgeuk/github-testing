@@ -44,13 +44,6 @@ To learn how to link this PR to a GitHub issue, see https://docs.github.com/en/i
 - [ ] Update documentation
 -->
 
-## Screenshots
-
-|         | Before | After |
-| ------- | ------ | ----- |
-| Mobile  |        |       |
-| Desktop |        |       |
-
 ## Checklist
 
 ℹ️ Where an item isn't relevant, simply check it off.
