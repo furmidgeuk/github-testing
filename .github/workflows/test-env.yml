@@ -34,8 +34,10 @@ jobs:
 
       - name: Request OIDC Token
         id: oidc-token
-        run: echo "OIDC_TOKEN=$(curl -sSL -H 'Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN' \
-          '${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=api://AzureADTokenExchange' | jq -r .value)" >> $GITHUB_ENV
+        run: |
+           OIDC_TOKEN=$(curl -sSL -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=api://AzureADTokenExchange" | jq -r .value)
+           echo "OIDC_TOKEN=$OIDC_TOKEN" >> $GITHUB_ENV
 
       - name: Login to Azure with OIDC Token
         run: az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} --tenant ${{ secrets.AZURE_TENANT_ID }} --federated-token $OIDC_TOKEN
