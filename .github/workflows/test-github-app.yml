@@ -1,0 +1,43 @@
+name: Use Github app
+on:
+  workflow_dispatch:
+  push:
+    paths:
+        - ".github/workflows/test-github-app.yml.yml"
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: dump context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+
+      - name: head ref
+        run: echo ${{ github.ref_name }}
+
+  checkout-other-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Token
+        id: get_workflow_token
+        # uses: peter-murray/workflow-application-token-action@v4
+        # with:
+        #   application_id: ${{ secrets.GH_APP_ID }}
+        #   application_private_key: ${{ secrets.GH_PRIVATE_KEY }}
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID  }}
+          private-key: ${{ secrets.GH_PRIVATE_KEY }} 
+          owner: ${{ github.repository_owner }}
+      # - run: | 
+      #        git clone "https://x:${{ steps.get_workflow_token.outputs.token }}@github.com/furmidgeuk/dc-release.git"
+      - name: Checkout
+        uses: actions/checkout@v4        
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          repository: furmidgeuk/dc-release
