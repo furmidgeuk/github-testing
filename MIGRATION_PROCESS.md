@@ -9,7 +9,7 @@ This document outlines the process for migrating repositories from the `NovoNord
 ```mermaid
 graph TD
   A[NovoNordisk-DataCore] -->|Initial Clone & Push| B[NN-Databricks]
-  A -->|Changes after Migration| C[Local Clone with Dual Remotes]
+  A -->|Changes after Migration| C[Local Clone<br>with Dual Remotes]
   C -->|Fetch Changes| A
   C -->|Push Updates| B
   B -->|Ongoing Development| B
@@ -18,7 +18,6 @@ graph TD
     D[Final Sync]
     A -->|Fetch Latest Changes| D
     D -->|Push to NN-Databricks| B
-    D -->|Archive Old Repo| E[Archive Old Repository]
   end
 
   subgraph Automation Option
@@ -26,6 +25,8 @@ graph TD
     F -->|Scheduled Sync| A
     F -->|Auto Push| B
   end
+
+
 ```
 
 ## Initial Migration
@@ -62,14 +63,14 @@ git fetch old-origin
 ```
 ## Merging Changes Before Final Cutover
 
-When you're ready to finalize the migration:
+When we are ready to finalize the migration:
 
 ### Pull and Push New Changes
 
 ```
-# Fetch and merge changes from old org
+# Fetch and merge changes from NovoNordisk-DataCore
 git fetch old-origin
-git merge old-origin/main  # or replace 'main' with the relevant branch
+git merge old-origin/main  
 
 # Push changes to the new organization
 git push origin main
@@ -90,7 +91,7 @@ name: Sync from NovoNordisk-DataCore
 on:
   schedule:
     - cron: '0 0 * * *'  # Runs daily at midnight
-  workflow_dispatch:     
+  workflow_dispatch:      # Manual trigger
 
 jobs:
   sync-repositories:
@@ -100,11 +101,18 @@ jobs:
         repo-name: [repo1, repo2, repo3]  # List of repositories to sync
 
     steps:
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: tibdex/github-app-token@v1  
+        with:
+          app_id: ${{ secrets.GH_APP_ID }}
+          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
       - name: Checkout NN-Databricks Repo
         uses: actions/checkout@v4
         with:
           repository: NN-Databricks/${{ matrix.repo-name }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.generate_token.outputs.token }}
 
       - name: Set Up Git
         run: |
@@ -113,11 +121,10 @@ jobs:
 
       - name: Add NovoNordisk-DataCore Remote and Sync
         run: |
-          git remote add old-origin https://github.com/NovoNordisk-DataCore/${{ matrix.repo-name }}.git
+          git remote add old-origin https://x-access-token:${{ steps.generate_token.outputs.token }}@github.com/NovoNordisk-DataCore/${{ matrix.repo-name }}.git
           git fetch old-origin
           git merge old-origin/main --allow-unrelated-histories || echo "No changes to merge"
           git push origin main
-
 
 
 ```
