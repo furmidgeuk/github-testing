@@ -1,6 +1,6 @@
 # GitHub Repository Migration Process
 
-This document outlines the process for migrating repositories from the `NovoNordisk-DataCore` organisation to `NN-Databricks` while supporting incremental updates.
+This document outlines the process for migrating repositories from the `NovoNordisk-DataCore` organisation to `NN-Datacore` while supporting incremental updates.
 
 ---
 
@@ -8,7 +8,7 @@ This document outlines the process for migrating repositories from the `NovoNord
 
 ```mermaid
 graph TD
-  A[NovoNordisk-DataCore] -->|Initial Clone & Push| B[NN-Databricks]
+  A[NovoNordisk-DataCore] -->|Initial Clone & Push| B[NN-Datacore]
   A -->|Changes after Migration| C[Local Clone<br>with Dual Remotes]
   C -->|Fetch Changes| A
   C -->|Push Updates| B
@@ -17,7 +17,7 @@ graph TD
   subgraph Final Migration Steps
     D[Final Sync]
     A -->|Fetch Latest Changes| D
-    D -->|Push to NN-Databricks| B
+    D -->|Push to NN-Datacore| B
   end
 
   subgraph Automation Option
@@ -38,21 +38,21 @@ For the initial migration, we can clone and push.
 git clone --mirror https://github.com/NovoNordisk-DataCore/repo-name.git
 cd repo-name.git
 
-# Push to the NN-Databricks
-git remote set-url origin https://github.com/NN-Databricks/repo-name.git
+# Push to the NN-Datacore
+git remote set-url origin https://github.com/NN-Datacore/repo-name.git
 git push --mirror
 ```
 - `--mirror` ensures all branches, tags, and history are copied.
 
 ## Tracking Changes After Migration
-Since changes may happen in both repositories, setting up a way to sync differences later is crucial. The best way is to periodically pull from `NovoNordisk-DataCore` and push to `NN-Databricks`.
+Since changes may happen in both repositories, setting up a way to sync differences later is crucial. The best way is to periodically pull from `NovoNordisk-DataCore` and push to `NN-Datacore`.
 
 ### Add Remotes for Tracking
 
 On your local machine or in a github action:
 ```
-# Clone from NN-Databricks
-git clone https://github.com/NN-Databricks/repo-name.git
+# Clone from NN-Datacore
+git clone https://github.com/NN-Datacore/repo-name.git
 cd repo-name
 
 # Add NovoNordisk-DataCore as a remote
@@ -83,7 +83,7 @@ git merge old-origin/feature-branch
 git push origin feature-branch
 ```
 ## Automate Incremental Sync with GitHub Actions 
-We could set up a GitHub Action in `NN-Databricks` to pull changes from `NovoNordisk-DataCore` automatically:
+We could set up a GitHub Action in `NN-Datacore` to pull changes from `NovoNordisk-DataCore` automatically:
 
 ```
 name: Sync from NovoNordisk-DataCore
@@ -108,10 +108,10 @@ jobs:
           app_id: ${{ secrets.GH_APP_ID }}
           private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
 
-      - name: Checkout NN-Databricks Repo
+      - name: Checkout NN-Datacore Repo
         uses: actions/checkout@v4
         with:
-          repository: NN-Databricks/${{ matrix.repo-name }}
+          repository: NN-Datacore/${{ matrix.repo-name }}
           token: ${{ steps.generate_token.outputs.token }}
 
       - name: Set Up Git
