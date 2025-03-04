@@ -1,4 +1,23 @@
 # Copy issues and pull requests from one organisation to another
+## Python setup
+Create a virtual environment
+```
+python3 -m venv <env name>
+```
+e.g.
+```
+python3 -m venv venv
+```
+
+Activate the environment on linux/macos
+```
+source venv/bin/activate
+```
+Activate the environment on Windows
+```
+.\env\Scripts\activate.bat
+```
+
 ## Install dependencies
 ```
 pip install requests python-dotenv
