@@ -20,11 +20,7 @@ DEST_REPO = "nndcp-docs"
 
 # GitHub Project ID
 PROJECT_ID = "PVT_kwDOCaCuvc4Azlr2"
-ITERATION_ID_MAP = {
-    "ea0f6749": "7f367449",  # Source ID → Target ID
-    "792d2d4e": "2e7ffa25",
-    "f0652ad5": "df921a35"
-}
+
 HEADERS = {
     "Authorization": f"Bearer {GITHUB_TOKEN}",
     "Accept": "application/vnd.github.v3+json",
@@ -394,8 +390,8 @@ def get_issue_project_fields(owner, repo, issue_number):
                           }
                         }
                         iterationId
-                        startDate
                         title
+                        startDate
                       }
                     }
                   }
@@ -450,7 +446,11 @@ def get_issue_project_fields(owner, repo, issue_number):
                 elif field_value["__typename"] == "ProjectV2ItemFieldNumberValue":
                     field_values[field_name] = field_value.get("number")
                 elif field_value["__typename"] == "ProjectV2ItemFieldIterationValue":
-                   field_values[field_name] = field_value.get("iterationId")
+                    # Store both the iteration ID and title for matching
+                    field_values[field_name] = {
+                        "id": field_value.get("iterationId"),
+                        "title": field_value.get("title")
+                    }
 
         print(f"🔍 Extracted Source Issue Fields: {json.dumps(field_values, indent=2)}")
         return field_values
@@ -459,6 +459,65 @@ def get_issue_project_fields(owner, repo, issue_number):
         print(f"❌ Error processing issue project fields: {e}")
         return {}
     
+def get_source_project_iterations():
+    """Get all iterations from the source project with their IDs and titles."""
+    query = {
+        "query": """
+        query($projectId: ID!) {
+          node(id: $projectId) {
+            ... on ProjectV2 {
+              fields(first: 50) {
+                nodes {
+                  ... on ProjectV2IterationField {
+                    id
+                    name
+                    configuration {
+                      iterations {
+                        id
+                        title
+                        startDate
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        """,
+        "variables": {
+            "projectId": PROJECT_ID
+        }
+    }
+
+    response = requests.post(GITHUB_GRAPHQL_URL, json=query, headers=HEADERS)
+    
+    if response.status_code != 200:
+        print(f"❌ Error fetching source iterations: {response.status_code}, {response.text}")
+        return {}
+    
+    data = response.json()
+    
+    if "errors" in data:
+        print(f"❌ GraphQL errors: {json.dumps(data['errors'], indent=2)}")
+        return {}
+    
+    iteration_map = {}
+    
+    try:
+        for field in data["data"]["node"]["fields"]["nodes"]:
+            if field is None:
+                continue
+                
+            if "configuration" in field and "iterations" in field["configuration"]:
+                for iteration in field["configuration"]["iterations"]:
+                    iteration_map[iteration["id"]] = iteration["title"]
+    except KeyError as e:
+        print(f"❌ Error parsing iterations: {e}")
+    
+    print(f"📅 Source Project Iterations Map: {json.dumps(iteration_map, indent=2)}")
+    return iteration_map
+
 def copy_issues():
     """Copy all issues and preserve all custom fields from the source project."""
     issues = get_issues(SOURCE_OWNER, SOURCE_REPO)
@@ -470,6 +529,9 @@ def copy_issues():
     # Fetch project custom fields for both source and destination
     source_custom_fields = get_custom_fields()  # Source project fields
     target_custom_fields = get_custom_fields()  # Destination project fields
+    
+    # Get source iteration ID to title mapping
+    source_iterations = get_source_project_iterations()
 
     for issue in issues:
         # Extract source issue project fields
@@ -492,39 +554,38 @@ def copy_issues():
                         # Determine the field type
                         field_id = field_data["id"]
                         field_type = field_data["type"]
-                        field_options = field_data.get("options", {})
-
-                        # Handle Type Field
-                        if field_name == "Type" and field_type == "ProjectV2SingleSelectField":
-                            type_value_id = field_options.get(source_value)
-                            if type_value_id:
-                                update_issue_field(item_id, field_id, type_value_id, field_type="singleSelect")
-                                print(f"✅ Type '{source_value}' applied to issue '{issue['title']}'")
+                        
+                        # Handle Iteration fields differently
+                        if field_type == "ProjectV2IterationField":
+                            # Handle differently if source_value is a dict (with title)
+                            if isinstance(source_value, dict) and "title" in source_value:
+                                iteration_title = source_value["title"]
                             else:
-                                print(f"⚠️ Could not find matching Type '{source_value}' in the destination project")
-
-                        # Handle Single Select Fields (e.g., Status, Priority, Size)
+                                # If it's just an ID, look up the title from our map
+                                iteration_id = source_value if isinstance(source_value, str) else source_value.get("id")
+                                iteration_title = source_iterations.get(iteration_id)
+                                
+                            if iteration_title:
+                                # Find the target iteration with the same title
+                                target_iterations = field_data.get("iterations", {})
+                                if iteration_title in target_iterations:
+                                    target_iteration_id = target_iterations[iteration_title]["id"]
+                                    update_issue_field(item_id, field_id, target_iteration_id, field_type="iteration")
+                                    print(f"✅ Iteration '{iteration_title}' applied to issue '{issue['title']}'")
+                                else:
+                                    print(f"⚠️ No matching iteration with title '{iteration_title}' found in target project")
+                            else:
+                                print(f"⚠️ Could not determine title for iteration ID: {source_value}, skipping update")
+                                
+                        # Handle Single Select Fields (e.g., Status, Priority, Size, Epic)
                         elif field_type == "ProjectV2SingleSelectField":
+                            field_options = field_data.get("options", {})
                             value_id = field_options.get(source_value)
                             if value_id:
                                 update_issue_field(item_id, field_id, value_id, field_type="singleSelect")
                                 print(f"✅ {field_name} '{source_value}' applied to issue '{issue['title']}'")
                             else:
                                 print(f"⚠️ Could not find {field_name} '{source_value}' in destination project")
-                                
-                        # Handle Iteration Fields
-                        elif field_type == "ProjectV2IterationField":
-                            source_iteration_id = source_value  # This should be the source iteration ID
-
-                            # Map to the target iteration ID
-                            target_iteration_id = ITERATION_ID_MAP.get(source_iteration_id)
-
-                            if target_iteration_id:
-                                update_issue_field(item_id, field_id, target_iteration_id, field_type="iteration")
-                                print(f"✅ Iteration mapped: '{source_iteration_id}' → '{target_iteration_id}' for issue '{issue['title']}'")
-                            else:
-                                print(f"⚠️ No mapping found for iteration ID: {source_iteration_id}, skipping iteration update.")
-        
 
 
 
