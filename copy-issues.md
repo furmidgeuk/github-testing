@@ -15,7 +15,7 @@ source venv/bin/activate
 ```
 Activate the environment on Windows
 ```
-.\env\Scripts\activate.bat
+.\venv\Scripts\activate.bat
 ```
 
 ## Install dependencies
