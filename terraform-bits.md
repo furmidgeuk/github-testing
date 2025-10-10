@@ -17,4 +17,4 @@ terraform plan -refresh=false -lock=false -input=false -var-file dev.tfvars
 terraform plan -refresh=false -lock=false -input=false -var-file dev.tfvars -out dev.tfplan     
 
 
-terraform apply -refresh=false -lock=false -input=false -var-file dev.tfvars     
+terraform apply -refresh=false -lock=false -input=false -var-file dev.tfvars dev.tfplan
