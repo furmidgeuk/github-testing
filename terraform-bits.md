@@ -10,9 +10,11 @@ EOF
 az login
 az account set --subscription "ccf37c3d-4ace-4fd7-888f-e989dad8a342"
 
-terraform init -input=false -backend-config=backend.tfvars
+terraform init -input=false -backend-config=backend.tfvars    
+
 terraform plan -refresh=false -lock=false -input=false -var-file prd.tfvars
 
-terraform plan -refresh=false -lock=false -input=false -var-file prd.tfvars -out main.tfplan
-# if you created a saved plan
-terraform apply -refresh=false -lock=false -input=false -var-file prd.tfvars 
+terraform plan -refresh=false -lock=false -input=false -var-file prd.tfvars -out main.tfplan     
+
+
+terraform apply -refresh=false -lock=false -input=false -var-file prd.tfvars     
