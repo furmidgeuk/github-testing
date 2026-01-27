@@ -91,9 +91,9 @@
 > For example, if a $300 warehouse is shared by 3 applications, each application shows $300 in their costs - not $100.
 
 > **Why full attribution instead of dividing by 3?**
-> We can't fairly divide costs without knowing exact usage percentages - which app runs 90% of the queries vs just 10%?
-> Because if your service principal is on that resource, you have the ability to optimize or remove it.
-> Showing you the full $300 creates accountability and a strong incentive to act. 
+> We can't fairly divide costs without knowing exact usage percentages - which app runs 90% of the queries vs just 10%?   
+> Because if your service principal is on that resource, you have the ability to optimize or remove it.   
+> Showing you the full $300 creates accountability and a strong incentive to act.    
 
 > This means if you sum all business application costs together, the total will be higher than the actual Databricks invoice. But for driving cost optimization behavior, this approach works better than diluting costs across teams."
 
