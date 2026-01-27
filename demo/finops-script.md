@@ -49,23 +49,24 @@
 > "Here's the end-to-end architecture - just the essentials.
 
 > We have two main data sources:
-> 1. **Databricks System Tables** - raw usage data: who ran what, when, and how many DBUs
-> 2. **dc-managed-services** on GitHub - where teams define their service principals and user groups
+> 1. **dc-managed-services** on GitHub - where teams define their service principals and user groups
+> 2. **Databricks System Tables** - raw usage data: who ran what, when, and how many DBUs
+
 
 > The key insight: we're using **existing metadata** - no manual tagging required."
 
 **SAY:**
 > "Three pipelines run daily:
-> - **dc-ingest-system** pulls Databricks system tables at 10 AM UTC
-> - **ingest-github** pulls business application mappings every 6 hours
-> - **transform-finops** joins everything together at 10:30 AM UTC
+> - **ingest-github** pulls business application mappings
+> - **dc-ingest-system** pulls Databricks system tables 
+> - **transform-finops** joins everything together
 
 > From there, teams can access the data through a dashboard and SQL queries."
 
 ### Slide 5: The Attribution Logic 
 
 **SAY:**
-> "This diagram shows our attribution logic - the fallback strategy for determining which business application owns a cost.
+> "This slide shows our attribution logic - the fallback strategy for determining which business application owns a cost.
 
 > We check identity fields in priority order: run_as → created_by → owned_by → cluster owner → warehouse creator.
 
@@ -79,7 +80,7 @@
 > - **User Groups** - mapped to business applications
 > - **Individual Users** - mapped through group membership
 
-> For shared resources, costs are attributed to all associated business applications using SQL's EXPLODE function - meaning each app sees the full cost of resources they have access to through their service principals or user groups."
+> For shared resources, costs are attributed to all associated business applications - meaning each app sees the full cost of resources they have access to through their service principals or user groups."
 
 ### Slide 6: Shared Resource Handling 
 
@@ -104,7 +105,7 @@
 > - Sum of all business app costs > actual invoice (due to cost duplication on shared resources)
 > - For exact invoice reconciliation, use EVP area view (Tab 2) which has no duplication
 
-### Slide 7: Self-Service Dashboard & Query Library [5:00 - 5:30]
+### Slide 7: Self-Service Dashboard & Query Library 
 
 **SAY:**
 > "So how do teams actually access all this cost data? We've built two self-service tools.
@@ -146,18 +147,18 @@
 **SAY:**
 > "Tab 1 is the executive summary - shows our total annual Databricks spend broken down into two categories.
 
-> [Point to the stacked bars] The blue bars show 'tagged costs' - these are costs successfully attributed to business applications. This represents our 70-90% coverage.
+> The green bars show 'tagged costs' - these are costs successfully attributed to business applications. This represents our 70-90% coverage.
 
-> [Point to the orange bars] The orange shows 'unstructured costs' - this is the 10-30% that couldn't be mapped to business applications yet. These are the costs shown in Query 3.
+> The blue shows 'unstructured costs' - this is the 10-30% that couldn't be mapped to business applications yet. 
 
-> This chart helps us track our attribution coverage over time - ideally we want to see the orange shrinking as we register more service principals and users in dc-managed-services."
+> This chart helps us track our attribution coverage over time - ideally we want to see the blue shrinking.
 
 **POINT OUT:**
 - Monthly breakdown of tagged vs unstructured (unmapped) costs
 - Attribution coverage trends month-over-month
 - Total Databricks spend per month
 
----
+--
 
 #### Tab 2: Costs by PRD Workspace (EVP Area)
 
