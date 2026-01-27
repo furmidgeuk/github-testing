@@ -255,7 +255,7 @@
 
 > [Point to identity column] When identity shows an actual ID (not 'NONE'), that's the specific service principal or user that needs to be added to dc-managed-services.
 
-> [Point to warehouse_id column] When identity is 'NONE' but warehouse_id has a value, we need to register that warehouse's creator in dc-managed-services."
+> [Point to warehouse_id column] When identity is 'NONE' but warehouse_id has a value, we need to find who created that warehouse and then register that creator in dc-managed-services."
 
 
 **TRANSITION:** Open for questions
