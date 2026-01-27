@@ -24,7 +24,7 @@ Yes, this means if you sum all business application costs, the total will exceed
 
 ### Q: "How accurate are the costs?"
 
-**A:** "We use Databricks list prices from their official system tables. These are pre-discount prices, so actual invoiced amounts may differ due to enterprise agreements. For exact invoice reconciliation, use Cloudability."
+**A:** "We use Databricks list prices from their official system tables. These are pre-discount prices, so actual invoiced amounts may differ due to enterprise agreements.
 
 ### Q: "Can I get more granular attribution - like by team within a business app?"
 
