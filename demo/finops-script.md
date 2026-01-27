@@ -52,9 +52,6 @@
 > 1. **dc-managed-services** on GitHub - where teams define their service principals and user groups
 > 2. **Databricks System Tables** - raw usage data: who ran what, when, and how many DBUs
 
-
-> The key insight: we're using **existing metadata** - no manual tagging required."
-
 **SAY:**
 > "Three pipelines run daily:
 > - **ingest-github** pulls business application mappings
