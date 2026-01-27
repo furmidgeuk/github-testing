@@ -100,10 +100,8 @@
 **KEY POINTS:**
 > - Shared resource costs are **attributed** to all associated business applications (not divided)
 > - Each app sees the **full cost** of resources they access
-> - **Why?** Creates accountability - if your identity is on it, you can optimize it
 > - Can't fairly divide without usage percentages (which app uses 90% vs 10%?)
 > - Sum of all business app costs > actual invoice (due to cost duplication on shared resources)
-> - For exact invoice reconciliation, use EVP area view (Tab 2) which has no duplication
 
 ### Slide 7: Self-Service Dashboard & Query Library 
 
@@ -128,8 +126,6 @@
 > - **Self-service**: No waiting for reports - teams query their own costs
 > - **Dashboard**: Visual overview for executives and stakeholders
 > - **SQL Queries**: Detailed analysis and filtering for power users
-> - **Query response time**: Under 5 seconds for most queries
-
 
 ## LIVE DEMO 
 
@@ -185,7 +181,7 @@
 **SAY:**
 > "Tab 3 is the core use case - costs by business application. Before this solution, we couldn't answer 'how much does a particular business application spend on Databricks?' Now it's right here.
 
-> [Point to the chart] This shows all business application costs across the year. You can see which applications are the biggest spenders and how costs trend month-to-month."
+> This shows all business application costs across the year. You can see which applications are the biggest spenders and how costs trend month-to-month."
 
 **POINT OUT:**
 - Yearly cost overview by business application
