@@ -258,7 +258,7 @@
 
 ---
 
-## Q&A [11:00+]
+## Q&A
 
 **SAY:**
 > "That's the 10-minute tour. Happy to take questions about the solution, dashboard access, or your specific application's costs."
