@@ -24,7 +24,7 @@ Use this section to prepare for questions about what each dashboard tab shows.
 - Monitoring data quality improvements as teams register service principals
 - Executive reporting on cost visibility improvements
 
-**Sample Question**: "Why do we have 'unstructured costs'?"
+**Sample Question**: "Why do we have 'unstructured costs'?"   
 **Answer**: "Unstructured costs are workloads we haven't mapped to business applications yet - either because the identity isn't in dc-managed-services, or the Databricks resource type doesn't provide identity metadata. Use Query 3 to see exactly what needs to be registered to improve coverage."
 
 ---
@@ -47,7 +47,7 @@ Use this section to prepare for questions about what each dashboard tab shows.
 - Identifying which business units have highest cloud spend
 - Budget allocation by organizational unit
 
-**Sample Question**: "How do we allocate costs to EVP areas for untagged workloads?"
+**Sample Question**: "How do we allocate costs to EVP areas for untagged workloads?"   
 **Answer**: "Tab 2 shows this. Every workspace maps to an EVP area in dc-managed-services. Untagged costs automatically roll up to the workspace's EVP area for chargeback."
 
 ---
@@ -68,7 +68,7 @@ Use this section to prepare for questions about what each dashboard tab shows.
 - Identifying applications with cost spikes across the year
 - Cost accountability for product teams
 
-**Sample Question**: "My application costs seem high this month - why?"
+**Sample Question**: "My application costs seem high this month - why?"   
 **Answer**: "Tab 3 shows your app's costs across the full year visually. For detailed filtering and drill-down, use Query 1 (total costs by business application) to see specific numbers, then Query 3 to identify unmapped costs."
 
 ---
@@ -93,7 +93,7 @@ Use this section to prepare for questions about what each dashboard tab shows.
 - Identifying inefficient resource usage patterns
 - Architectural decisions (should we use serverless or classic?)
 
-**Sample Question**: "Why did our costs spike last month?"
+**Sample Question**: "Why did our costs spike last month?"   
 **Answer**: "Tab 4 can help diagnose this. If you see a spike in DLT_CORE_COMPUTE, it means you started running Delta Live Tables pipelines. If it's ALL_PURPOSE_COMPUTE, it might be developers running interactive clusters that weren't shut down."
 
 ---
